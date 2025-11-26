@@ -1,98 +1,227 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
-</p>
+# E-commerce Product Management REST API (NestJS)
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+A RESTful API built with NestJS for managing products, categories, and users in an e-commerce system. It supports JWT authentication, role-based access control, product search, and pagination.
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+## Features
 
-## Description
+### User Management
+* Register and login users.
+* Password hashing using bcrypt.
+* Roles:
+  * **Admin** – manage products & categories.
+  * **Customer** – view products & categories only.
+* JWT authentication for protected routes.
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+### Product Management
+* **Admin**: Create, update, delete, and view products.
+* **Customer**: View products only.
+* Product attributes: `id`, `name`, `description`, `price`, `category`.
 
-## Project setup
+### Category Management
+* **Admin**: Create, update, delete categories.
+* **Customer**: View categories and products within each category.
+* Supports many products per category.
 
-```bash
-$ npm install
+### Search & Pagination
+* Pagination: `GET /products?page=1&limit=10`
+* Search by name/description: `GET /products?search=iphone`
+
+### Security & Validation
+* Role-based authorization.
+* JWT guards.
+* DTO validation with class-validator.
+
+### Optional Features
+* Swagger docs (`/api`)
+* TypeORM + PostgreSQL
+* Optional Redis caching for product search
+
+## Tech Stack
+
+* NestJS
+* TypeScript
+* TypeORM
+* PostgreSQL
+* JWT
+* bcrypt
+* class-validator / class-transformer
+* Swagger (`@nestjs/swagger`)
+
+## Project Structure
+
+```
+src/
+  auth/
+  users/
+  products/
+  categories/
+  common/
+  app.module.ts
+  main.ts
 ```
 
-## Compile and run the project
+## Installation
+
+### 1. Clone the repository
 
 ```bash
-# development
-$ npm run start
-
-# watch mode
-$ npm run start:dev
-
-# production mode
-$ npm run start:prod
+git clone https://github.com/danabrooks31/ecommerce-api.git
+cd ecommerce-api
 ```
 
-## Run tests
+### 2. Install dependencies
 
 ```bash
-# unit tests
-$ npm run test
-
-# e2e tests
-$ npm run test:e2e
-
-# test coverage
-$ npm run test:cov
+npm install
 ```
 
-## Deployment
+### 3. Create `.env`
 
-When you're ready to deploy your NestJS application to production, there are some key steps you can take to ensure it runs as efficiently as possible. Check out the [deployment documentation](https://docs.nestjs.com/deployment) for more information.
+```env
+PORT=3000
 
-If you are looking for a cloud-based platform to deploy your NestJS application, check out [Mau](https://mau.nestjs.com), our official platform for deploying NestJS applications on AWS. Mau makes deployment straightforward and fast, requiring just a few simple steps:
+DB_HOST=localhost
+DB_PORT=5432
+DB_USER=postgres
+DB_PASSWORD=postgres
+DB_NAME=ecommerce_db
+
+JWT_SECRET=your-secret
+JWT_EXPIRES_IN=3600s
+```
+
+### 4. Set up PostgreSQL
+
+```sql
+CREATE DATABASE ecommerce_db;
+```
+
+Ensure TypeORM config is reading from `.env`.
+
+## Running the App
 
 ```bash
-$ npm install -g @nestjs/mau
-$ mau deploy
+npm run start:dev
 ```
 
-With Mau, you can deploy your application in just a few clicks, allowing you to focus on building features rather than managing infrastructure.
+Server runs at:
 
-## Resources
+```
+http://localhost:3000
+```
 
-Check out a few resources that may come in handy when working with NestJS:
+## Swagger Documentation
 
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Deploy your application to AWS with the help of [NestJS Mau](https://mau.nestjs.com) in just a few clicks.
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
+Open:
 
-## Support
+```
+http://localhost:3000/api
+```
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+To test protected routes:
+* Click **Authorize**
+* Enter: `Bearer <your-jwt>`
 
-## Stay in touch
+## Authentication Flow
 
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+### Register
+`POST /auth/register`
+
+```json
+{
+  "email": "admin@example.com",
+  "password": "password123",
+  "role": "admin"
+}
+```
+
+### Login
+`POST /auth/login`
+
+```json
+{
+  "email": "admin@example.com",
+  "password": "password123"
+}
+```
+
+Response:
+
+```json
+{
+  "access_token": "..."
+}
+```
+
+Use token in header:
+
+```
+Authorization: Bearer <access_token>
+```
+
+## API Endpoints
+
+### Auth
+
+| Method | Route | Description |
+|--------|-------|-------------|
+| POST | `/auth/register` | Register user |
+| POST | `/auth/login` | Login & get JWT |
+
+### Products
+
+| Method | Route | Description | Role |
+|--------|-------|-------------|------|
+| GET | `/products` | Get products (search/pagination) | All |
+| GET | `/products/:id` | Get product by ID | All |
+| POST | `/products` | Create product | Admin |
+| PUT | `/products/:id` | Update product | Admin |
+| DELETE | `/products/:id` | Delete product | Admin |
+
+### Categories
+
+| Method | Route | Description | Role |
+|--------|-------|-------------|------|
+| GET | `/categories` | Get categories | All |
+| GET | `/categories/:id` | Get category by ID | All |
+| POST | `/categories` | Create category | Admin |
+| PUT | `/categories/:id` | Update category | Admin |
+| DELETE | `/categories/:id` | Delete category | Admin |
+
+## Tested Functionality
+
+* App boots & returns Hello World
+* Registration (Admin + Customer)
+* Login (Admin + Customer)
+* JWT auth works with Bearer tokens
+* Category:
+  * Create
+  * Get all
+  * Get by ID
+  * Update
+  * Delete
+* Product:
+  * Create
+  * Get all
+  * Get by ID
+  * Update
+* Role guard:
+  * Customer receives 403 Forbidden on Admin routes
+
+Pagination has been implemented but may need final verification.
+
+## Future Improvements
+
+* Verify pagination logic & implement full metadata (page, limit, total).
+* Add Redis caching for search results.
+* Add Jest unit/e2e tests.
+* Add soft delete for entities.
+
+## Contributing
+
+Contributions are welcome! Please feel free to submit a Pull Request.
 
 ## License
 
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
