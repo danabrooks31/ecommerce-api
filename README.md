@@ -31,10 +31,9 @@ A RESTful API built with NestJS for managing products, categories, and users in 
 * JWT guards.
 * DTO validation with class-validator.
 
-### Optional Features
+### Additional Features
 * Swagger docs (`/api`)
 * TypeORM + PostgreSQL
-* Optional Redis caching for product search
 
 ## Tech Stack
 
